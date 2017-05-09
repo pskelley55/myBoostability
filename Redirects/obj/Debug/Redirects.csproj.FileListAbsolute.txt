@@ -1,1 +1,6 @@
 C:\oldComputerFiles\pkelleyMyDocuments1\resumeinfo\otherFiles\interviewTests\boostability\redirects\Redirects\Redirects\bin\Debug\Redirects.exe.config
+C:\oldComputerFiles\pkelleyMyDocuments1\resumeinfo\otherFiles\interviewTests\boostability\redirects\Redirects\Redirects\bin\Debug\Redirects.exe
+C:\oldComputerFiles\pkelleyMyDocuments1\resumeinfo\otherFiles\interviewTests\boostability\redirects\Redirects\Redirects\bin\Debug\Redirects.pdb
+C:\oldComputerFiles\pkelleyMyDocuments1\resumeinfo\otherFiles\interviewTests\boostability\redirects\Redirects\Redirects\obj\Debug\Redirects.csprojResolveAssemblyReference.cache
+C:\oldComputerFiles\pkelleyMyDocuments1\resumeinfo\otherFiles\interviewTests\boostability\redirects\Redirects\Redirects\obj\Debug\Redirects.exe
+C:\oldComputerFiles\pkelleyMyDocuments1\resumeinfo\otherFiles\interviewTests\boostability\redirects\Redirects\Redirects\obj\Debug\Redirects.pdb
