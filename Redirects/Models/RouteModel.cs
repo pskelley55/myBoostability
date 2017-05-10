@@ -8,14 +8,8 @@ using System.Security.Cryptography;
 
 namespace Redirects.Models
 {
-    public class RouteModel : IRouteAnalyzer
+    public class RouteModel
     {
-        #region Constants
-        internal const string RedirectString = "->";
-        internal const int INDEX_FROMLOC = 0;
-        internal const int INDEX_TOLOC = 1;
-        #endregion Constants
-
         #region Member Variables
         static RouteModel _routeModel;
         #endregion Member Variables
@@ -34,24 +28,49 @@ namespace Redirects.Models
                 if (_routeModel == null)
                 {
                     _routeModel = new RouteModel();
+                    _routeModel.RouteTable = new Dictionary<string, RouteObject>();
                 }
                 return _routeModel;
             }
         }
+
+        // Key -> The hash value of the "toLoc"ation
+        // Value -> The RouteObject
+        public Dictionary<string, RouteObject> RouteTable;
         #endregion Properties
 
         #region Public Methods
+        public bool IsRouteAdded(string fromLoc, string toLoc)
+        {
+            var routeKey = GetHashString(toLoc);
+            var routeObj = new RouteObject(fromLoc, toLoc);
+            return ShouldAddRoute(routeKey, routeObj);
+        }
+
+        public bool IsRouteAdded(string fromLoc)
+        {
+            var routeKey = GetHashString(fromLoc);
+            var routeObj = new RouteObject(fromLoc, RouteObject.ToLocStub);
+            return ShouldAddRoute(routeKey, routeObj);
+        }
+
         #endregion Public Methods
 
         #region Private Methods
-        bool AddRoute(string fromLoc, string toLoc)
+        bool ShouldAddRoute(string routeKey, RouteObject routeObj)
         {
-            bool isGood = true;
+            bool isGood = false;
+            if (IsNewRoute(routeKey))
+            {
+                RouteTable.Add(routeKey, routeObj);
+                isGood = true;
+            }
             return isGood;
         }
 
-        void AddRoute(string fromLoc)
+        bool IsNewRoute(string hashValue)
         {
+            return !(RouteTable.ContainsKey(hashValue));
         }
 
         string GetHashString(string inputString)
@@ -69,28 +88,5 @@ namespace Redirects.Models
             return algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
         }
         #endregion Private Methods
-
-        #region IRouteAnalyzer Implementation
-        public IEnumerable<string> Process(IEnumerable<string> routes)
-        {
-            foreach(string route in routes)
-            {
-                var fromToLocArray = route.Split(new string[] { RedirectString }, StringSplitOptions.None);
-                if (fromToLocArray.Length > 1)
-                {
-                    // We have fromLoc and toLoc
-                    if (!AddRoute(fromToLocArray[INDEX_FROMLOC], fromToLocArray[INDEX_TOLOC]))
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    // Just have a fromLoc
-                }
-            }
-            return null;
-        }
-        #endregion IRouteAnalyzer Implementation
     }
 }
