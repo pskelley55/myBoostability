@@ -10,12 +10,6 @@ namespace Redirects.Controllers
 {
     public class RouteController : IRouteAnalyzer
     {
-        #region Constants
-        internal const string RedirectString = "->";
-        internal const int INDEX_FROMLOC = 0;
-        internal const int INDEX_TOLOC = 1;
-        #endregion Constants
-
         #region Member Variables
         RouteModel _routeModel;
         #endregion Member Variables
@@ -45,11 +39,11 @@ namespace Redirects.Controllers
         {
             foreach (string route in routes)
             {
-                var fromToLocArray = route.Split(new string[] { RedirectString }, StringSplitOptions.None);
+                var fromToLocArray = route.Split(new string[] { RouteModel.RedirectString }, StringSplitOptions.None);
                 if (fromToLocArray.Length > 1)
                 {
                     // We have fromLoc and toLoc
-                    if (!RouteModel.IsRouteAdded(fromToLocArray[INDEX_FROMLOC].Trim(), fromToLocArray[INDEX_TOLOC].Trim()))
+                    if (!RouteModel.IsRouteAdded(fromToLocArray[RouteModel.INDEX_FROMLOC].Trim(), fromToLocArray[RouteModel.INDEX_TOLOC].Trim()))
                     {
                         return null;
                     }
@@ -57,13 +51,13 @@ namespace Redirects.Controllers
                 else
                 {
                     // Just have a fromLoc
-                    if (!RouteModel.IsRouteAdded(fromToLocArray[INDEX_FROMLOC].Trim()))
+                    if (!RouteModel.IsRouteAdded(fromToLocArray[RouteModel.INDEX_FROMLOC].Trim()))
                     {
                         return null;
                     }
                 }
             }
-            return null;
+            return RouteModel.RouteList;
         }
         #endregion IRouteAnalyzer Implementation
     }

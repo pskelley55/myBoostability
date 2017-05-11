@@ -10,8 +10,14 @@ namespace Redirects.Models
 {
     public class RouteModel
     {
+        #region Constants
+        internal const string RedirectString = "->";
+        internal const int INDEX_FROMLOC = 0;
+        internal const int INDEX_TOLOC = 1;
+        #endregion Constants
+
         #region Member Variables
-        static RouteModel _routeModel;
+        private static readonly RouteModel _routeModel = new RouteModel();
         #endregion Member Variables
 
         #region Constructors
@@ -25,10 +31,10 @@ namespace Redirects.Models
         {
             get
             {
-                if (_routeModel == null)
+                if (_routeModel.RouteTable == null)
                 {
-                    _routeModel = new RouteModel();
                     _routeModel.RouteTable = new Dictionary<string, RouteObject>();
+                    _routeModel.PathDictionary = new Dictionary<string, string>();
                 }
                 return _routeModel;
             }
@@ -37,12 +43,26 @@ namespace Redirects.Models
         // Key -> The hash value of the "toLoc"ation
         // Value -> The RouteObject
         public Dictionary<string, RouteObject> RouteTable;
+
+        // Key -> A hash value (either the fromLoc or the toLoc).
+        // Value -> A path under construction of the form "A->B->C..."
+        Dictionary<string, string> PathDictionary;
+
+        public List<string> RouteList
+        {
+            get
+            {
+                var routeList = new List<string>();
+                BuildRouteList(routeList);
+                return routeList;
+            }
+        }
         #endregion Properties
 
         #region Public Methods
         public bool IsRouteAdded(string fromLoc, string toLoc)
         {
-            var routeKey = GetHashString(toLoc);
+            var routeKey = GetHashString(fromLoc);
             var routeObj = new RouteObject(fromLoc, toLoc);
             return ShouldAddRoute(routeKey, routeObj);
         }
@@ -57,6 +77,55 @@ namespace Redirects.Models
         #endregion Public Methods
 
         #region Private Methods
+        void BuildRouteList(List<string> routeList)
+        {
+            foreach (KeyValuePair<string, RouteObject> item in RouteTable)
+            {
+                var fromLoc = item.Value.FromLoc;
+                var toLoc = item.Value.ToLoc;
+                var valFromHash = GetHashString(fromLoc);
+                string valToHash = string.Empty;
+                if (!string.Equals(toLoc, RouteObject.ToLocStub))
+                {
+                    valToHash = GetHashString(toLoc);
+                }
+                if (!string.IsNullOrEmpty(valToHash))
+                {
+                    if (RouteTable.ContainsKey(valToHash))
+                    {
+                        PathDictionary.Add(valToHash, fromLoc + RedirectString + toLoc);
+                        fromLoc = null;
+                        toLoc = null;
+                    }
+                    else if (PathDictionary.ContainsKey(valFromHash))
+                    {
+                        string curPath = string.Empty;
+                        if (PathDictionary.TryGetValue(valFromHash, out curPath))
+                        {
+                            curPath += RedirectString + toLoc;
+                            PathDictionary[valFromHash] = curPath;
+                            fromLoc = null;
+                            toLoc = null;
+                        }
+                    }
+                }
+                if ((!string.IsNullOrEmpty(fromLoc))
+                    && (!string.IsNullOrEmpty(toLoc))
+                    && (!string.Equals(toLoc, RouteObject.ToLocStub)))
+                {
+                    routeList.Add(fromLoc + RedirectString + toLoc);
+                }
+                else if (!string.IsNullOrEmpty(fromLoc))
+                {
+                    routeList.Add(fromLoc);
+                }
+            }
+            foreach(KeyValuePair<string, string> item in PathDictionary)
+            {
+                routeList.Add(item.Value);
+            }
+        }
+
         bool ShouldAddRoute(string routeKey, RouteObject routeObj)
         {
             bool isGood = false;
