@@ -20,9 +20,21 @@ namespace Redirects.Views
         #endregion Constructors
 
         #region Public Methods
+        public void ShowRoutes()
+        {
+            Console.WriteLine();
+            _routeList.ForEach(x => Console.WriteLine(x));
+            EndProgram();
+        }
         #endregion Public Methods
 
         #region Private Methods
+        void EndProgram()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Press <Enter> to end program");
+            Console.ReadLine();
+        }
         #endregion Private Methods
     }
 }

@@ -16,12 +16,13 @@ namespace Redirects
     {
         static void Main(string[] args)
         {
-            var goodRouteData = new List<string>(new string[] {"/our-ceo.html -> /about-us.html", "/about-us.html -> /about", "/product-1.html -> /seo", "/home"});
-            //var goodRouteData = new List<string>(new string[] { "/home", "/our-ceo.html -> /about-us.html", "/about-us.html -> /about", "/product-1.html -> /seo" });
+            //var goodRouteData = new List<string>(new string[] {"/our-ceo.html -> /about-us.html", "/about-us.html -> /about", "/product-1.html -> /seo", "/home"});
+            var goodRouteData = new List<string>(new string[] { "/home", "/our-ceo.html -> /about-us.html", "/about-us.html -> /about", "/product-1.html -> /seo" });
             var badRouteData = new List<string>(new string[] { "/about-us.html -> /about", "/about -> about-us.html" });
             var routeController = new RouteController(RouteModel.Instance);
             var routes = routeController.Process(goodRouteData);
             var routeView = new RouteView(routes.ToList());
+            routeView.ShowRoutes();
         }
     }
 }
