@@ -1,0 +1,8 @@
+C:\oldComputerFiles\pkelleyMyDocuments1\resumeinfo\otherFiles\interviewTests\boostability\redirects\Redirects\RedirectsTests\bin\Debug\RedirectsTests.dll
+C:\oldComputerFiles\pkelleyMyDocuments1\resumeinfo\otherFiles\interviewTests\boostability\redirects\Redirects\RedirectsTests\bin\Debug\RedirectsTests.pdb
+C:\oldComputerFiles\pkelleyMyDocuments1\resumeinfo\otherFiles\interviewTests\boostability\redirects\Redirects\RedirectsTests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\oldComputerFiles\pkelleyMyDocuments1\resumeinfo\otherFiles\interviewTests\boostability\redirects\Redirects\RedirectsTests\bin\Debug\Redirects.exe
+C:\oldComputerFiles\pkelleyMyDocuments1\resumeinfo\otherFiles\interviewTests\boostability\redirects\Redirects\RedirectsTests\bin\Debug\Redirects.pdb
+C:\oldComputerFiles\pkelleyMyDocuments1\resumeinfo\otherFiles\interviewTests\boostability\redirects\Redirects\RedirectsTests\obj\Debug\RedirectsTests.csprojResolveAssemblyReference.cache
+C:\oldComputerFiles\pkelleyMyDocuments1\resumeinfo\otherFiles\interviewTests\boostability\redirects\Redirects\RedirectsTests\obj\Debug\RedirectsTests.dll
+C:\oldComputerFiles\pkelleyMyDocuments1\resumeinfo\otherFiles\interviewTests\boostability\redirects\Redirects\RedirectsTests\obj\Debug\RedirectsTests.pdb
