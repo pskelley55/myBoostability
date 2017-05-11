@@ -18,6 +18,10 @@ namespace Redirects.Models
         #endregion Constants
 
         #region Constructors
+        /// <summary>
+        /// Constructs are RouteModel object and creates an empty
+        /// RouteDictionary and PathDictionary.
+        /// </summary>
         public RouteModel()
         {
             RouteDictionary = new Dictionary<string, RouteObject>();
@@ -36,6 +40,12 @@ namespace Redirects.Models
         #endregion Properties
 
         #region Public Methods
+        /// <summary>
+        /// Determines if the given route should be added to the RouteDictionary
+        /// </summary>
+        /// <param name="fromLoc">The route "from" location</param>
+        /// <param name="toLoc">The route "to" location</param>
+        /// <returns></returns>
         public bool IsRouteAdded(string fromLoc, string toLoc)
         {
             var routeKey = GetHashString(fromLoc);
@@ -43,6 +53,13 @@ namespace Redirects.Models
             return ShouldAddRoute(routeKey, routeObj);
         }
 
+        /// <summary>
+        /// Determines if the given route should be added to the RouteDictionary
+        /// (overloaded method used in the case where only the "from" location
+        /// was given).
+        /// </summary>
+        /// <param name="fromLoc">The route "from" location</param>
+        /// <returns></returns>
         public bool IsRouteAdded(string fromLoc)
         {
             var routeKey = GetHashString(fromLoc);
@@ -50,6 +67,12 @@ namespace Redirects.Models
             return ShouldAddRoute(routeKey, routeObj);
         }
 
+        /// <summary>
+        /// Uses the RouteDictionary and PathDictionary to build routes
+        /// and detect circular references.
+        /// If circular reference is detected, throws a RouteException.
+        /// </summary>
+        /// <returns>List of routes</returns>
         public List<string> BuildRouteList()
         {
             var routeList = new List<string>();

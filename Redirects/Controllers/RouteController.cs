@@ -15,6 +15,10 @@ namespace Redirects.Controllers
         #endregion Member Variables
 
         #region Constructors
+        /// <summary>
+        /// Constructs the RouteController Object.
+        /// </summary>
+        /// <param name="routeModel"></param>
         public RouteController(RouteModel routeModel)
         {
             _routeModel = routeModel;
@@ -30,9 +34,6 @@ namespace Redirects.Controllers
             }
         }
         #endregion Properties
-
-        #region Public Methods
-        #endregion Public Methods
 
         #region IRouteAnalyzer Implementation
         public IEnumerable<string> Process(IEnumerable<string> routes)
