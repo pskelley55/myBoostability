@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Redirects.Interfaces;
 using System.Security.Cryptography;
+using Redirects.ErrorHandlers;
 
 namespace Redirects.Models
 {
@@ -16,47 +17,22 @@ namespace Redirects.Models
         internal const int INDEX_TOLOC = 1;
         #endregion Constants
 
-        #region Member Variables
-        private static readonly RouteModel _routeModel = new RouteModel();
-        #endregion Member Variables
-
         #region Constructors
-        private RouteModel()
+        public RouteModel()
         {
+            RouteDictionary = new Dictionary<string, RouteObject>();
+            PathDictionary = new Dictionary<string, PathDictionaryObject>();
         }
         #endregion Constructors
 
         #region Properties
-        public static RouteModel Instance
-        {
-            get
-            {
-                if (_routeModel.RouteTable == null)
-                {
-                    _routeModel.RouteTable = new Dictionary<string, RouteObject>();
-                    _routeModel.PathDictionary = new Dictionary<string, string>();
-                }
-                return _routeModel;
-            }
-        }
-
         // Key -> The hash value of the "toLoc"ation
         // Value -> The RouteObject
-        public Dictionary<string, RouteObject> RouteTable;
+        public Dictionary<string, RouteObject> RouteDictionary { get; set; }
 
         // Key -> A hash value (either the fromLoc or the toLoc).
         // Value -> A path under construction of the form "A->B->C..."
-        Dictionary<string, string> PathDictionary;
-
-        public List<string> RouteList
-        {
-            get
-            {
-                var routeList = new List<string>();
-                BuildRouteList(routeList);
-                return routeList;
-            }
-        }
+        public Dictionary<string, PathDictionaryObject> PathDictionary { get; set; }
         #endregion Properties
 
         #region Public Methods
@@ -74,12 +50,10 @@ namespace Redirects.Models
             return ShouldAddRoute(routeKey, routeObj);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-        void BuildRouteList(List<string> routeList)
+        public List<string> BuildRouteList()
         {
-            foreach (KeyValuePair<string, RouteObject> item in RouteTable)
+            var routeList = new List<string>();
+            foreach (KeyValuePair<string, RouteObject> item in RouteDictionary)
             {
                 var fromLoc = item.Value.FromLoc;
                 var toLoc = item.Value.ToLoc;
@@ -91,22 +65,24 @@ namespace Redirects.Models
                 }
                 if (!string.IsNullOrEmpty(valToHash))
                 {
-                    if (RouteTable.ContainsKey(valToHash))
+                    PathDictionaryObject pathDictionaryObj = null;
+                    if ((!PathDictionary.ContainsKey(valFromHash))
+                        && (RouteDictionary.ContainsKey(valToHash)))
                     {
-                        PathDictionary.Add(valToHash, fromLoc + RedirectString + toLoc);
+                        PathDictionary.Add(valToHash, new PathDictionaryObject(valFromHash, fromLoc + RedirectString + toLoc));
                         fromLoc = null;
                         toLoc = null;
                     }
-                    else if (PathDictionary.ContainsKey(valFromHash))
+                    else if (PathDictionary.TryGetValue(valFromHash, out pathDictionaryObj))
                     {
-                        string curPath = string.Empty;
-                        if (PathDictionary.TryGetValue(valFromHash, out curPath))
+                        if (string.Equals(pathDictionaryObj.FromLocationHash, valToHash))
                         {
-                            curPath += RedirectString + toLoc;
-                            PathDictionary[valFromHash] = curPath;
-                            fromLoc = null;
-                            toLoc = null;
+                            throw new RouteException("Oh No! " + pathDictionaryObj.CurrentPath + RedirectString + toLoc);
                         }
+                        pathDictionaryObj.CurrentPath += RedirectString + toLoc;
+                        PathDictionary[valFromHash] = pathDictionaryObj;
+                        fromLoc = null;
+                        toLoc = null;
                     }
                 }
                 if ((!string.IsNullOrEmpty(fromLoc))
@@ -120,18 +96,21 @@ namespace Redirects.Models
                     routeList.Add(fromLoc);
                 }
             }
-            foreach(KeyValuePair<string, string> item in PathDictionary)
+            foreach (KeyValuePair<string, PathDictionaryObject> item in PathDictionary)
             {
-                routeList.Add(item.Value);
+                routeList.Add(item.Value.CurrentPath);
             }
+            return routeList;
         }
+        #endregion Public Methods
 
+        #region Private Methods
         bool ShouldAddRoute(string routeKey, RouteObject routeObj)
         {
             bool isGood = false;
             if (IsNewRoute(routeKey))
             {
-                RouteTable.Add(routeKey, routeObj);
+                RouteDictionary.Add(routeKey, routeObj);
                 isGood = true;
             }
             return isGood;
@@ -139,7 +118,7 @@ namespace Redirects.Models
 
         bool IsNewRoute(string hashValue)
         {
-            return !(RouteTable.ContainsKey(hashValue));
+            return !(RouteDictionary.ContainsKey(hashValue));
         }
 
         string GetHashString(string inputString)

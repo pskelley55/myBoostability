@@ -44,7 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\RouteController.cs" />
+    <Compile Include="ErrorHandlers\RouteException.cs" />
     <Compile Include="Interfaces\IRouteAnalyzer.cs" />
+    <Compile Include="Models\PathDictionaryObject.cs" />
     <Compile Include="Models\RouteModel.cs" />
     <Compile Include="Models\RouteObject.cs" />
     <Compile Include="Program.cs" />

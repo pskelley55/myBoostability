@@ -8,22 +8,28 @@ namespace Redirects.Views
 {
     public class RouteView
     {
-        #region Member Variables
-        List<string> _routeList;
-        #endregion Member Variables
-
         #region Constructors
-        public RouteView(List<string> routeList)
+        public RouteView()
         {
-            _routeList = routeList;
         }
         #endregion Constructors
 
+        #region Properties
+        public List<string> RouteList { get; set; }
+        #endregion Properties
+
         #region Public Methods
+        public void ShowError(string errorMsg)
+        {
+            Console.WriteLine();
+            Console.WriteLine(errorMsg);
+            EndProgram();
+        }
+
         public void ShowRoutes()
         {
             Console.WriteLine();
-            _routeList.ForEach(x => Console.WriteLine(x));
+            RouteList?.ForEach(x => Console.WriteLine(x));
             EndProgram();
         }
         #endregion Public Methods

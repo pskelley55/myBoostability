@@ -57,7 +57,7 @@ namespace Redirects.Controllers
                     }
                 }
             }
-            return RouteModel.RouteList;
+            return RouteModel.BuildRouteList();
         }
         #endregion IRouteAnalyzer Implementation
     }
