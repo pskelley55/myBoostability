@@ -23,24 +23,15 @@ namespace Redirects.Views
         {
             Console.WriteLine();
             Console.WriteLine(errorMsg);
-            EndProgram();
+            Console.WriteLine();
         }
 
         public void ShowRoutes()
         {
             Console.WriteLine();
             RouteList?.ForEach(x => Console.WriteLine(x));
-            EndProgram();
+            Console.WriteLine();
         }
         #endregion Public Methods
-
-        #region Private Methods
-        void EndProgram()
-        {
-            Console.WriteLine();
-            Console.WriteLine("Press <Enter> to end program");
-            Console.ReadLine();
-        }
-        #endregion Private Methods
     }
 }
